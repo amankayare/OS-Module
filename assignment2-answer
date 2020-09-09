@@ -1,0 +1,67 @@
+Q1
+ans:$ chmod 777 q1.sh
+
+for (( i=1; i<=10; i++ ))
+do
+mkdir a$i;
+done
+   
+  $ ./q1.sh
+
+Q2
+Ans
+while (true)
+do
+
+ echo "   M A I N - M E N U"
+ echo "a. To find length of a string"
+ echo "b. Copying string"
+ echo "c. Concatenation of strings"
+ echo "d. Compare two strings"
+ echo "e. Reversing a string"
+ echo "f. Exit"
+ echo -n "Please enter option [a - f]"
+ read str
+ read opt
+ case $opt in
+  a) echo ${#str} 
+     ;;
+  b) cpvar=$str
+     echo $cpvar 
+     ;;
+
+  c) read input
+     echo $input$str   
+     ;;
+
+  d) read input
+     if [ $input==$str ];
+	then
+	echo "equal"
+     else
+	echo "not equal"   
+     fi
+     ;; 
+
+  e)echo $str | rev
+     ;;
+
+  f) echo "Bye $USER"
+     exit 1;
+	;;
+  *) echo "$opt is an invaild option. Please select option between a-f only"
+     echo "Press [enter] key to continue. . ."
+     read enterKey;;
+esac
+done
+
+Q3
+Ans
+
+i=0;
+for entry in "$search_dir"/home/aman/work-place/Linux-cmd/assignment-2/Q3/*
+do
+  ((i=i+1))
+  mv $entry $i.txt
+done
+
