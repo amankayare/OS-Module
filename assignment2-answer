@@ -65,3 +65,41 @@ do
   mv $entry $i.txt
 done
 
+
+Q4
+
+   echo "Path = $PATH"  
+   echo "Shell = $SHELL"
+   echo "History = $HISTORY"
+   echo "Logname = $LOGNAME"
+   echo "Term = $TERM"
+  
+Q5
+
+ls -la | cut -b 1-10
+ls -la | cut -c 1-10
+
+Q6
+
+ #!/bin/bash
+
+ls -l | awk '{ print $1,$9 }' 
+
+
+Q7
+ #!/bin/bash
+for i in *
+do
+        if [ "-f" "$i" ];
+                then
+#       echo -n  "$i"   
+        file=`ls -l "$i" | awk '{print $5}'`
+#       echo "  $file"          
+if [ "$file" > 5000 ];
+                        then
+                        ls -l "$i"
+                fi 
+        fi
+done
+
+
