@@ -1,0 +1,170 @@
+Q1
+Ans:
+#include <iostream> 
+#include <sys/types.h> 
+#include <unistd.h> 
+#include <stdlib.h> 
+using namespace std; 
+int main() { 
+	pid_t pid; 
+
+	pid = fork(); 
+	if(pid==0) { 
+		cout <<"child process:" << getpid() <<"  " << getppid() <<  endl; 
+		exit(0); 
+
+	} else if(pid>0) { 
+		cout << "parent process:" << getpid()<< "  "  << getppid() << endl; 
+		execl("/bin/date", "date", NULL);
+		exit(0);
+	}
+	else { 
+		cout << "process is not created" << endl; 
+	} 
+exit(0);
+return 0;
+} 
+
+Q2
+Ans:
+
+#include <iostream>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sched.h>
+
+using namespace std;
+int main()
+{
+    pid_t pid;
+    pid = fork();
+    if (pid == 0)
+    {
+        // cout << pid << endl;
+        cout << "This is child process. Process ID: " << getpid() << "  "
+             << "Parent ID: " << getppid() << "  "
+             << "Scheduling Policy Status: "
+             << sched_getscheduler(pid) << endl;
+
+        // execl("/bin/date", "date", NULL);
+        cout << endl
+             << "-----------------------------" << endl;
+        exit(0);
+    }
+    else if (pid > 0)
+    {
+        cout << "this is parent process:" << getpid() << "  "
+             << "Parent ID: " << getppid() << "  "
+             << "Scheduling Policy Status: "
+             << sched_getscheduler(pid) << endl;
+
+        exit(0);
+    }
+    else
+    {
+        cout << "process is not created" << endl;
+    }
+    exit(0);
+    return 0;
+}
+
+Q4
+
+Ans:
+
+
+#include <iostream>
+#include <bits/stdc++.h>
+#include <iomanip>
+
+using namespace std;
+
+struct Process
+{
+    string process;
+    int responseTime;
+    int completionTime;
+    int waitingTime;
+    int turnAroundTime;
+    int averageTime;
+    int burstTime;
+
+    static bool arrivalTimeCompare(Process p1, Process p2)
+    {
+        return (p1.averageTime < p2.averageTime);
+    }
+};
+
+int main()
+{
+    cout << "Enter Number of Processes: ";
+    int totalProcess;
+    cin >> totalProcess;
+
+    Process p;
+    Process processQueue[totalProcess];
+    float averageWaitingTime = 0;
+    float averageTurnAroundTime = 0;
+
+    for (int i = 0; i < totalProcess; i++)
+    {
+        string pro;
+        int arrivalTime, burstTime;
+
+        cout << "Enter Process Name: ";
+        cin >> pro;
+
+        cout << "Enter Process Arrival Time: ";
+        cin >> arrivalTime;
+
+        cout << "Enter Process Burst Time: ";
+        cin >> burstTime;
+
+        processQueue[i].averageTime = arrivalTime;
+        processQueue[i].burstTime = burstTime;
+        processQueue[i].process = pro;
+    }
+    //sorting based on arrival time 
+    sort(processQueue, processQueue + totalProcess, p.arrivalTimeCompare);
+
+    for (int i = 0; i < totalProcess; i++)
+    {
+        if (i == 0)
+        {
+            processQueue[i].responseTime = processQueue[i].averageTime;
+            processQueue[i].completionTime = processQueue[i].responseTime + processQueue[i].burstTime;
+            processQueue[i].waitingTime = processQueue[i].responseTime - processQueue[i].averageTime;
+            processQueue[i].turnAroundTime = processQueue[i].completionTime - processQueue[i].averageTime;
+
+            averageWaitingTime += processQueue[i].waitingTime;
+            averageTurnAroundTime += processQueue[i].turnAroundTime;
+        }
+        else
+        {
+            processQueue[i].responseTime = processQueue[i - 1].completionTime;
+            processQueue[i].completionTime = processQueue[i].responseTime + processQueue[i].burstTime;
+            processQueue[i].waitingTime = processQueue[i].responseTime - processQueue[i].averageTime;
+            processQueue[i].turnAroundTime = processQueue[i].completionTime - processQueue[i].averageTime;
+
+            averageWaitingTime += processQueue[i].waitingTime;
+            averageTurnAroundTime += processQueue[i].turnAroundTime;
+        }
+    }
+    averageWaitingTime /= float(totalProcess);
+    averageTurnAroundTime /= float(totalProcess);
+
+    cout << "Average  Waiting  Time: " << fixed << setprecision(2) << averageWaitingTime << endl;
+    cout << "Average Turnaround Time: " << fixed << setprecision(2) << averageTurnAroundTime << endl;
+
+    return 0;
+}
+/*
+
+Process ID	Arrival Time |	Burst Time  |	Completion Time	| Turnaround Time | Waiting Time
+P0	           0	              6	            6	             6	             0
+P1	           1	              8	           14	             13              5
+P2	           2	             10	           24	             22	             12
+P3	           3	             12	           36	             33	             21
+
+*/
